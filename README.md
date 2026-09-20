@@ -112,7 +112,14 @@ B: [1, 0]
 C: [4, 0]
 ```
 
-As ligações entre os pontos são armazenadas em uma lista. A distância de cada ligação é calculada pelas coordenadas dos dois extremos. Depois, essa lista é convertida em um grafo, onde cada ponto mantém os seus vizinhos e a distância até eles.
+As ligações entre os pontos são armazenadas em uma lista com origem, destino e sentido. Uma ligação sem `"dupla"` permite somente o deslocamento indicado pela seta. Uma ligação marcada como `"dupla"` permite deslocamento nos dois sentidos.
+
+```js
+["B", "G"]           // B → G
+["A", "B", "dupla"] // A ↔ B
+```
+
+A distância de cada ligação é calculada pelas coordenadas dos dois extremos. Depois, essa lista é convertida em um grafo, onde cada ponto mantém apenas os vizinhos que podem ser alcançados seguindo o sentido da rua.
 
 Essa representação evita dados repetidos e facilita a alteração do mapa caso seja necessário adicionar ou remover uma rua.
 
@@ -133,4 +140,4 @@ Essa representação evita dados repetidos e facilita a alteração do mapa caso
 2. O A* combina custo acumulado (`g`) e estimativa até o destino (`h`).
 3. A heurística pode ser trocada sem alterar o mapa ou o algoritmo principal.
 4. O resultado textual mostra a sequência da rota e os custos acumulados.
-5. O canvas diferencia visualmente ruas testadas e ruas escolhidas.
+5. O canvas diferencia visualmente ruas testadas e ruas escolhidas, além de mostrar o sentido permitido pelas setas pretas.

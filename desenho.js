@@ -48,7 +48,35 @@ function ruaEstaNaRota(ponto1, ponto2) {
   return false;
 }
 
-function desenharRua(ponto1, ponto2) {
+function desenharPontaDaSeta(inicio, fim, posicao) {
+  var angulo = Math.atan2(fim.y - inicio.y, fim.x - inicio.x);
+  var x = inicio.x + (fim.x - inicio.x) * posicao;
+  var y = inicio.y + (fim.y - inicio.y) * posicao;
+
+  contexto.save();
+  contexto.fillStyle = "#1e293b";
+  contexto.translate(x, y);
+  contexto.rotate(angulo);
+  contexto.beginPath();
+  contexto.moveTo(8, 0);
+  contexto.lineTo(-6, -5);
+  contexto.lineTo(-6, 5);
+  contexto.closePath();
+  contexto.fill();
+  contexto.restore();
+}
+
+function desenharSentidoDaRua(ponto1, ponto2, sentido) {
+  var inicio = posicaoNoCanvas(ponto1);
+  var fim = posicaoNoCanvas(ponto2);
+
+  desenharPontaDaSeta(inicio, fim, 0.5);
+  if (sentido === "dupla") {
+    desenharPontaDaSeta(fim, inicio, 0.58);
+  }
+}
+
+function desenharRua(ponto1, ponto2, sentido) {
   var inicio = posicaoNoCanvas(ponto1);
   var fim = posicaoNoCanvas(ponto2);
 
@@ -67,6 +95,7 @@ function desenharRua(ponto1, ponto2) {
   contexto.moveTo(inicio.x, inicio.y);
   contexto.lineTo(fim.x, fim.y);
   contexto.stroke();
+  desenharSentidoDaRua(ponto1, ponto2, sentido);
 }
 
 function corDoNo(nome) {
@@ -105,7 +134,7 @@ function desenharMapa() {
   desenharGrade();
 
   for (i = 0; i < ligacoes.length; i++) {
-    desenharRua(ligacoes[i][0], ligacoes[i][1]);
+    desenharRua(ligacoes[i][0], ligacoes[i][1], ligacoes[i][2]);
   }
   for (i = 0; i < nomes.length; i++) {
     desenharNo(nomes[i]);

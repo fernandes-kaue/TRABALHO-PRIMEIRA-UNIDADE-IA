@@ -7,14 +7,15 @@ var pontos = {
   Q: [0, 5], R: [1, 5], S: [3, 5], T: [4, 5], U: [7, 5]
 };
 
-// Cada item indica uma rua que liga dois pontos.
+// Cada item indica uma rua: [origem, destino, sentido].
+// "dupla" permite seguir nos dois sentidos. Sem "dupla", só permite origem -> destino.
 var ligacoes = [
-  ["A", "B"], ["B", "C"], ["C", "D"], ["D", "E"],
-  ["A", "F"], ["B", "G"], ["C", "H"], ["D", "M"], ["E", "I"], ["I", "N"],
-  ["F", "G"], ["G", "H"], ["G", "J"], ["H", "L"], ["J", "K"],
-  ["K", "L"], ["L", "M"], ["M", "N"], ["F", "Q"], ["J", "R"],
-  ["K", "S"], ["L", "O"], ["N", "P"], ["O", "P"], ["O", "T"],
-  ["Q", "R"], ["R", "S"], ["S", "T"], ["T", "U"], ["P", "U"]
+  ["A", "B", "dupla"], ["B", "C", "dupla"], ["C", "D", "dupla"], ["D", "E", "dupla"],
+  ["A", "F", "dupla"], ["B", "G"], ["H", "C"], ["D", "M", "dupla"], ["E", "I"], ["I", "N"],
+  ["F", "G", "dupla"], ["G", "H", "dupla"], ["G", "J"], ["L", "H"], ["K", "J"],
+  ["L", "K"], ["M", "L"], ["N", "M"], ["F", "Q", "dupla"], ["J", "R"],
+  ["K", "S", "dupla"], ["O", "L"], ["T", "O"], ["P", "O"], ["N", "P"],
+  ["Q", "R"], ["R", "S"], ["S", "T"], ["T", "U", "dupla"], ["P", "U"]
 ];
 
 function calcularDistancia(ponto1, ponto2) {
@@ -40,7 +41,9 @@ function criarGrafo() {
     var distancia = calcularDistancia(ponto1, ponto2);
 
     grafo[ponto1].push({ nome: ponto2, distancia: distancia });
-    grafo[ponto2].push({ nome: ponto1, distancia: distancia });
+    if (ligacoes[i][2] === "dupla") {
+      grafo[ponto2].push({ nome: ponto1, distancia: distancia });
+    }
   }
   return grafo;
 }
