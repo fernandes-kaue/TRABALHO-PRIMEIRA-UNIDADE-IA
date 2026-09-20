@@ -13,6 +13,11 @@ function calcularHeuristica(pontoAtual, destino, tipo) {
 
 function ordenarPorF(lista) {
   lista.sort(function (a, b) {
+    if (a.f === b.f) {
+      if (a.nome < b.nome) return -1;
+      if (a.nome > b.nome) return 1;
+      return 0;
+    }
     return a.f - b.f;
   });
 }
