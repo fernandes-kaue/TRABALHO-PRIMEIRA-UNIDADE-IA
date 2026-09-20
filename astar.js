@@ -1,44 +1,83 @@
+function calcularHeuristica(pontoAtual, destino, tipo) {
+  var dx = Math.abs(pontos[pontoAtual][0] - pontos[destino][0]);
+  var dy = Math.abs(pontos[pontoAtual][1] - pontos[destino][1]);
+
+  if (tipo === "euclidiana") {
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+  if (tipo === "chebyshev") {
+    return Math.max(dx, dy);
+  }
+  return dx + dy;
+}
+
+function ordenarPorF(lista) {
+  lista.sort(function (a, b) {
+    return a.f - b.f;
+  });
+}
+
+function montarRota(anterior, destino) {
+  var rota = [];
+  var ponto = destino;
+
+  while (ponto !== undefined) {
+    rota.unshift(ponto);
+    ponto = anterior[ponto];
+  }
+  return rota;
+}
+
 function calcularAEstrela(grafo, origem, destino, tipoHeuristica) {
-  const aberto = [{ no: origem, f: 0 }];
-  const custo = { [origem]: 0 };
-  const anterior = {};
-  const fechados = new Set();
-  const testadas = new Set();
+  var abertos = [{ nome: origem, f: 0 }];
+  var custos = {};
+  var anterior = {};
+  var fechados = [];
+  var testadas = [];
+  custos[origem] = 0;
 
-  while (aberto.length > 0) {
-    aberto.sort((a, b) => a.f - b.f);
-    const atual = aberto.shift();
-    if (fechados.has(atual.no)) continue;
-    fechados.add(atual.no);
-    if (atual.no === destino) break;
+  while (abertos.length > 0) {
+    ordenarPorF(abertos);
+    var atual = abertos.shift();
 
-    for (const vizinho of grafo[atual.no].vizinhos) {
-      testadas.add(`${atual.no}-${vizinho.no}`);
-      const novoCusto = custo[atual.no] + vizinho.distancia;
-      if (custo[vizinho.no] === undefined || novoCusto < custo[vizinho.no]) {
-        custo[vizinho.no] = novoCusto;
-        anterior[vizinho.no] = atual.no;
-        aberto.push({
-          no: vizinho.no,
-          f:
-            novoCusto +
-            heuristica(grafo[vizinho.no], grafo[destino], tipoHeuristica),
+    if (fechados.indexOf(atual.nome) !== -1) {
+      continue;
+    }
+    fechados.push(atual.nome);
+
+    if (atual.nome === destino) {
+      break;
+    }
+
+    var vizinhos = grafo[atual.nome];
+    for (var i = 0; i < vizinhos.length; i++) {
+      var vizinho = vizinhos[i];
+      var identificador = atual.nome + "-" + vizinho.nome;
+      var novoCusto = custos[atual.nome] + vizinho.distancia;
+
+      if (testadas.indexOf(identificador) === -1) {
+        testadas.push(identificador);
+      }
+
+      if (custos[vizinho.nome] === undefined || novoCusto < custos[vizinho.nome]) {
+        custos[vizinho.nome] = novoCusto;
+        anterior[vizinho.nome] = atual.nome;
+        abertos.push({
+          nome: vizinho.nome,
+          f: novoCusto + calcularHeuristica(vizinho.nome, destino, tipoHeuristica)
         });
       }
     }
   }
-  if (custo[destino] === undefined) return null;
 
-  const rota = [];
-  for (let ponto = destino; ponto !== undefined; ponto = anterior[ponto])
-    rota.unshift(ponto);
-  return { rota, custo, testadas, expandidos: fechados.size };
-}
+  if (custos[destino] === undefined) {
+    return null;
+  }
 
-function heuristica(a, b, tipo) {
-  const dx = Math.abs(a.x - b.x);
-  const dy = Math.abs(a.y - b.y);
-  if (tipo === "euclidiana") return Math.sqrt(dx * dx + dy * dy);
-  if (tipo === "chebyshev") return Math.max(dx, dy);
-  return dx + dy;
+  return {
+    rota: montarRota(anterior, destino),
+    custos: custos,
+    testadas: testadas,
+    expandidos: fechados.length
+  };
 }

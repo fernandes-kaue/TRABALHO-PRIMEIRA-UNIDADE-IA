@@ -122,8 +122,10 @@ Essa representação evita dados repetidos e facilita a alteração do mapa caso
 | --- | --- |
 | `index.html` | Estrutura da página, controles e área de resultado |
 | `style.css` | Cores, layout responsivo e aparência da interface |
+| `mapa.js` | Dados dos pontos, ruas, distâncias e criação do grafo |
 | `astar.js` | Implementação do algoritmo A* e das heurísticas |
-| `app.js` | Dados do mapa, criação do grafo, canvas e eventos de clique |
+| `desenho.js` | Desenho do mapa e das cores no canvas |
+| `interface.js` | Campos, botões, resultado e eventos de clique |
 
 ## Pontos principais para apresentação
 
