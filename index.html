@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rotas A* | Cidade Virtual</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header>
+        <p class="eyebrow">Inteligência Artificial · Avaliação em Grupo</p>
+        <h1>Busca de rotas com A*</h1>
+        <p class="subtitle">
+          Selecione os pontos no mapa ou nos campos abaixo e compare as
+          heurísticas.
+        </p>
+      </header>
+      <section class="controls" aria-label="Configuração da busca">
+        <label
+          >Origem
+          <select id="origem"></select
+        ></label>
+        <label
+          >Destino
+          <select id="destino"></select
+        ></label>
+        <label
+          >Heurística
+          <select id="heuristica">
+            <option value="manhattan">Distância de Manhattan</option>
+            <option value="euclidiana">Distância Euclidiana</option>
+            <option value="chebyshev">Distância de Chebyshev</option>
+          </select>
+        </label>
+        <button id="buscar" type="button">Calcular rota</button>
+        <button id="limpar" class="secondary" type="button">Limpar</button>
+      </section>
+      <section class="content">
+        <div class="map-card">
+          <div class="legend" aria-label="Legenda">
+            <span><i class="line normal"></i>Ruas disponíveis</span>
+            <span><i class="line tested"></i>Arestas testadas</span>
+            <span><i class="line route"></i>Rota escolhida</span>
+          </div>
+          <canvas
+            id="mapa"
+            width="920"
+            height="600"
+            aria-label="Mapa clicável da cidade virtual"
+          ></canvas>
+          <p class="map-help">
+            Clique em um ponto para definir origem; clique em outro para definir
+            destino.
+          </p>
+        </div>
+        <aside class="result-card" aria-live="polite">
+          <p class="eyebrow">Resultado</p>
+          <h2 id="status">Aguardando seleção</h2>
+          <div class="metric">
+            <span>Heurística</span><strong id="heuristica-usada">—</strong>
+          </div>
+          <div class="metric">
+            <span>Custo total</span><strong id="custo">—</strong>
+          </div>
+          <div class="metric">
+            <span>Nós expandidos</span><strong id="expandidos">—</strong>
+          </div>
+          <h3>Trajeto acumulado</h3>
+          <p id="trajeto" class="route-text">
+            Selecione uma origem e um destino.
+          </p>
+          <p class="note">
+            Em cada ponto, o número entre parênteses é a distância acumulada
+            desde a origem.
+          </p>
+        </aside>
+      </section>
+    </main>
+    <script src="astar.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
